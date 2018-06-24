@@ -48,6 +48,8 @@ class AndrewBot(object):
         # TODO(spark): implement admin commands and security checks
         if self.commands.is_exists(command):
             await self.commands.execute(command, msg)
+        else:
+            await msg.send_back('Команда не найдена!')
 
     def init_logging(self):
         self.logger.setLevel(logging.INFO)
