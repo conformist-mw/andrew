@@ -95,3 +95,6 @@ ENV/
 .ropeproject
 
 .idea/
+.vagga/
+local_config.py
+production_config.py
