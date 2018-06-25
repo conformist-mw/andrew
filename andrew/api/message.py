@@ -1,4 +1,4 @@
-class Message:
+class AbstractMessage:
     def __init__(self):
         self.connection = None
         self.sender = None
@@ -6,4 +6,4 @@ class Message:
         self.raw = None
 
     async def send_back(self, text):
-        await self.connection.send_message(self.sender, text)
+        pass

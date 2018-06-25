@@ -9,7 +9,7 @@ class Plugin(AbstractPlugin):
         self.andrew.commands.add_command('ping', self.handler)
 
     def get_description(self):
-        return 'Send "pong" in reply'
+        return 'Отправляет "Pong!" в ответ'
 
     def is_visible(self):
         return True

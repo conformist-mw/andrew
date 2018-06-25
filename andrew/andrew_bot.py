@@ -1,8 +1,8 @@
 import logging
 import os
 import sys
-import time
 
+from andrew.plugins import Plugins
 from .connections import Connectons
 from .commands import Commands
 from .config import Config
@@ -15,6 +15,7 @@ class AndrewBot(object):
         self.database = Database(self)
         self.logger = logging.getLogger()
 
+        self.plugins = Plugins(self)
         self.connections = Connectons(self)
         self.commands = Commands()
         self.filters = []
@@ -73,8 +74,5 @@ class AndrewBot(object):
         for f in os.listdir(path):
             fname, ext = os.path.splitext(f)
             if ext == '.py':
-                self.logger.debug('Found plugin {}'.format(fname))
-                mod = __import__(fname)
-                mod.Plugin(self).register()
-                self.logger.debug('Loaded plugin {}'.format(fname))
+                self.plugins.add_plugin(fname)
         sys.path.pop(0)

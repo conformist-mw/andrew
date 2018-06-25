@@ -8,10 +8,10 @@ class Connectons:
         self._connectors = {}
         self._connections = {}
 
-    def add_connector(self, protocol, connector):
-        if protocol in self._connectors:
-            raise Exception('Connector with protocol {} already exists'.format(protocol))
-        self._connectors[protocol] = connector
+    def add_connector(self, connector):
+        if connector.protocol in self._connectors:
+            raise Exception('Connector with protocol {} already exists'.format(connector.protocol))
+        self._connectors[connector.protocol] = connector
 
     def connect(self, connections):
         # Start new asyncio loop
