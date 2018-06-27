@@ -38,8 +38,12 @@ class Plugin(AbstractPlugin):
             return True
 
         string = '{}д{}: '.format(count, val)
-
+        sum = 0
         for i in range(count):
-            string += '\[{}] '.format(randint(1, val))
+            rand = randint(1, val)
+            string += '\[{}] '.format(rand)
+            sum += rand
+
+        string += '| \[{}]'.format(sum)
 
         await message.send_back(string)
