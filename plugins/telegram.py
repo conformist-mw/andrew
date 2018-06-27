@@ -48,3 +48,6 @@ class Message(AbstractMessage):
 
     def is_groupchat(self):
         return self.raw['chat']['id'] < 0
+
+    def is_reply(self):
+        return 'reply_to_message' in self.raw

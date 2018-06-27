@@ -9,4 +9,7 @@ class AbstractMessage:
         pass
 
     def is_groupchat(self):
-        pass
+        return False
+
+    def is_reply(self):
+        return False
