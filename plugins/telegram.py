@@ -41,7 +41,7 @@ class Plugin(AbstractConnector):
 
 class Message(AbstractMessage):
     async def send_back(self, text):
-        if self.raw['chat']['id'] < 0:
+        if self.is_groupchat():
             await self.connection.send_message(self.raw['chat']['id'], text, self.raw['message_id'])
         else:
             await self.connection.send_message(self.sender, text)
