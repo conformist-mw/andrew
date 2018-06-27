@@ -45,3 +45,6 @@ class Message(AbstractMessage):
             await self.connection.send_message(self.raw['chat']['id'], text, self.raw['message_id'])
         else:
             await self.connection.send_message(self.sender, text)
+
+    def is_groupchat(self):
+        return self.raw['chat']['id'] < 0

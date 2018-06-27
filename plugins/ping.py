@@ -6,7 +6,7 @@ class Plugin(AbstractPlugin):
         self.andrew = andrew
 
     def register(self):
-        self.andrew.commands.add_command('ping', self.handler)
+        self.andrew.commands.add_command('ping', 'Отправляет "Pong!" в ответ', self.handler)
 
     def get_description(self):
         return 'Отправляет "Pong!" в ответ'

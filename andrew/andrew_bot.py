@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 
+from andrew.filters import Filters
 from andrew.plugins import Plugins
 from .connections import Connectons
 from .commands import Commands
@@ -18,8 +19,7 @@ class AndrewBot(object):
         self.plugins = Plugins(self)
         self.connections = Connectons(self)
         self.commands = Commands()
-        self.filters = []
-        self.admin_commands = []
+        self.filters = Filters()
 
         self.running = True
 
@@ -39,7 +39,9 @@ class AndrewBot(object):
         self.running = False
 
     async def handle_message(self, msg):
-        # TODO(spark): implement filters
+        if await self.filters.execute(msg) is False:
+            return
+
         if msg.text.startswith(self.config['COMMAND_SYMBOL']) and len(msg.text) > 1 and msg.text[1] is not ' ':
             await self.handle_command(msg)
 

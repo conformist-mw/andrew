@@ -6,7 +6,7 @@ class Plugin(AbstractPlugin):
         self.andrew = andrew
 
     def register(self):
-        self.andrew.commands.add_command('plugins', self.handler)
+        self.andrew.commands.add_command('plugins', 'Показывает список загруженных плагинов', self.handler)
 
     def get_description(self):
         return 'Показывает список загруженных плагинов'

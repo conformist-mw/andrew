@@ -7,3 +7,6 @@ class AbstractMessage:
 
     async def send_back(self, text):
         pass
+
+    def is_groupchat(self):
+        pass
