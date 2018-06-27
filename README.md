@@ -1,3 +1,3 @@
 # andrew_bot
 
-Telegram bot with plugins
+Multiplatform bot with plugins
