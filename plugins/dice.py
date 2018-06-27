@@ -29,6 +29,9 @@ class Plugin(AbstractPlugin):
         if count > 100:
             await message.send_back('Ты пытаешься бросить слишком много кубиков!')
             return True
+        if count == 0 or val == 0:
+            await message.send_back('Не пытайся меня сломать!')
+            return True
 
         if val > 100:
             await message.send_back('Слишком много рёбер!')
