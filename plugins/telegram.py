@@ -26,12 +26,7 @@ class Plugin(AbstractConnector):
         return self._bot.loop
 
     async def handler(self, chat, message):
-        msg = Message()
-
-        msg.connection = self
-        msg.sender = message['from']['id']
-        msg.text = message['text']
-        msg.raw = message
+        msg = Message.build_from_raw(self, message)
 
         await self.andrew.handle_message(msg)
 
@@ -41,13 +36,33 @@ class Plugin(AbstractConnector):
 
 class Message(AbstractMessage):
     async def send_back(self, text):
-        if self.is_groupchat():
+        if self.from_groupchat():
             await self.connection.send_message(self.raw['chat']['id'], text, self.raw['message_id'])
         else:
             await self.connection.send_message(self.sender, text)
 
-    def is_groupchat(self):
+    def from_groupchat(self):
         return self.raw['chat']['id'] < 0
+
+    def from_bot(self):
+        return self.raw['from']['is_bot']
 
     def is_reply(self):
         return 'reply_to_message' in self.raw
+
+    def get_groupchat_id(self):
+        return self.raw['chat']['id']
+
+    def get_reply_message(self):
+        return Message.build_from_raw(self.connection, self.raw['reply_to_message'])
+
+
+    @staticmethod
+    def build_from_raw(connection, raw):
+        msg = Message()
+
+        msg.connection = connection
+        msg.sender = raw['from']['id']
+        msg.text = raw['text']
+        msg.raw = raw
+        return msg

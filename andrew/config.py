@@ -16,6 +16,7 @@ class BaseConfig(object):
     LOG_FILENAME = 'bot.log'
 
     PLUGINS_PATH = 'plugins'
+    STORAGE_PATH = 'storage'
 
     COMMAND_SYMBOL = '!'
 

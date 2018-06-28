@@ -7,6 +7,7 @@ class Connectons:
 
         self._connectors = {}
         self._connections = {}
+        self._tasks = []
 
     def add_connector(self, connector):
         if connector.protocol in self._connectors:
@@ -25,6 +26,12 @@ class Connectons:
 
             # Create new connector instance
             connector = self._connectors[connection['protocol']].__class__(self.andrew)
-            loop.create_task(connector.connect(connection)())
+            self._tasks.append(loop.create_task(connector.connect(connection)()))
             self._connections[c] = connection
-        loop.run_forever()
+        try:
+            loop.run_forever()
+        except KeyboardInterrupt:
+            for t in self._tasks:
+                t.cancel()
+            for d in self.andrew.database.cache:
+                self.andrew.database.cache[d].close()

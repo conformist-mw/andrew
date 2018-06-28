@@ -1,4 +1,6 @@
 import abc
+import inspect
+import os
 
 
 class AbstractPlugin:
@@ -11,3 +13,8 @@ class AbstractPlugin:
     @abc.abstractmethod
     def is_visible(self):
         pass
+
+    def get_db(self):
+        frame = inspect.stack()[1]
+        module = inspect.getmodule(frame[0])
+        return self.andrew.database[os.path.basename(module.__file__)]

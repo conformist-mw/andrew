@@ -1,3 +1,4 @@
 tinydb
 import_string
 aiotg
+ujson

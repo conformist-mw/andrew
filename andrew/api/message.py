@@ -8,8 +8,14 @@ class AbstractMessage:
     async def send_back(self, text):
         pass
 
-    def is_groupchat(self):
+    def from_groupchat(self):
+        return False
+
+    def from_bot(self):
         return False
 
     def is_reply(self):
         return False
+
+    def get_groupchat_id(self):
+        return 0
