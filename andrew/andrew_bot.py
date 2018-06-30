@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import signal
 
 from andrew.filters import Filters
 from andrew.plugins import Plugins
@@ -21,22 +22,30 @@ class AndrewBot(object):
         self.commands = Commands()
         self.filters = Filters()
 
-        self.running = True
-
     def run(self):
         self.init_logging()
         self.logger.info('Starting AndrewBot')
+        signal.signal(signal.SIGTERM, self.stop)
+        self.load()
 
+    def stop(self):
+        self.logger.info('Stopping bot')
+        self.unload()
+
+        sys.exit(0)
+
+    def load(self):
         self.logger.info('Init plugins')
-        self.init_plugins()
+        self.plugins.scan_plugins(self.config['PLUGINS_PATH'])
 
         self.logger.info('Start connections')
         self.connections.connect(self.config['CONNECTIONS'])
 
-        self.logger.info('Stopping bot')
-
-    def stop(self):
-        self.running = False
+    def unload(self):
+        for t in self.connections.tasks:
+            t.cancel()
+        for d in self.database.cache:
+            self.database.cache[d].close()
 
     async def handle_message(self, msg):
         if await self.filters.execute(msg) is False:
@@ -69,12 +78,3 @@ class AndrewBot(object):
             fh = logging.FileHandler(self.config['LOG_FILENAME'])
             fh.setFormatter(formatter)
             self.logger.addHandler(fh)
-
-    def init_plugins(self):
-        path = self.config['PLUGINS_PATH']
-        sys.path.insert(0, path)
-        for f in os.listdir(path):
-            fname, ext = os.path.splitext(f)
-            if ext == '.py':
-                self.plugins.add_plugin(fname)
-        sys.path.pop(0)
