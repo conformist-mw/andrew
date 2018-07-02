@@ -1,14 +1,16 @@
 import asyncio
+import time
 
 from andrew.api.plugin import AbstractPlugin
 from tinydb import Query
-from tinydb.operations import increment
 
 
 class Plugin(AbstractPlugin):
     def __init__(self, andrew):
         self.andrew = andrew
         self.db = self.get_db()
+        self.cooldown = {}
+        self.cooldown_timer = 7 #in seconds
 
     def register(self):
         self.andrew.commands.add_command('karma', 'Показывает текущую карму пользователя', self.command_handler)
@@ -26,30 +28,25 @@ class Plugin(AbstractPlugin):
         await message.send_back(string)
 
     async def filter_handler(self, message):
+
+        self.andrew.logger.info(message.raw)
         if message.from_groupchat() and message.is_reply():
             if message.text.startswith('++'):
-                if message.get_reply_message().from_bot():
-                    await message.send_back('Нельзя изменять карму боту!')
-                    return True
-
-                if message.get_reply_message().sender == message.sender:
-                    await message.send_back('Нельзя изменять карму самому себе!')
+                checks = await self.checks(message)
+                if not checks:
                     return True
 
                 await self.change_karma(message, 1)
-                await message.send_back('Поднял карму пользователю до {}!'.format(
+                await message.send_back('Поднял карму {} до {}!'.format(
+                                        message.get_nickname(),
                                         await self.get_karma(message, message.get_reply_message().sender)))
             elif message.text.startswith('--') or message.text.startswith('—'):
-                if message.get_reply_message().from_bot():
-                    await message.send_back('Нельзя изменять карму боту!')
-                    return True
-
-                if message.get_reply_message().sender == message.sender:
-                    await message.send_back('Нельзя изменять карму самому себе!')
+                if not await self.checks(message):
                     return True
 
                 await self.change_karma(message, -1)
-                await message.send_back('Опустил карму пользователю до {}!'.format(
+                await message.send_back('Опустил карму {} до {}!'.format(
+                                        message.get_nickname(),
                                         await self.get_karma(message, message.get_reply_message().sender)))
 
     async def get_karma(self, message, sender_id):
@@ -67,3 +64,20 @@ class Plugin(AbstractPlugin):
 
         table = self.db.table(str(message.get_groupchat_id()))
         table.update({'karma': karma + diff}, Query().sender_id == message.get_reply_message().sender)
+
+    async def checks(self, message):
+        if message.get_reply_message().from_bot():
+            await message.send_back('Нельзя изменять карму боту!')
+            return False
+
+        if message.get_reply_message().sender == message.sender:
+            await message.send_back('Нельзя изменять карму самому себе!')
+            return False
+
+        if message.sender in self.cooldown:
+            if time.time() - self.cooldown[message.sender] < self.cooldown_timer:
+                await message.send_back('Нельзя изменять карму так часто!')
+                return False
+
+        self.cooldown[message.sender] = time.time()
+        return True

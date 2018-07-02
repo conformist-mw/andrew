@@ -98,4 +98,3 @@ ENV/
 .vagga/
 storage/
 local_config.py
-production_config.py

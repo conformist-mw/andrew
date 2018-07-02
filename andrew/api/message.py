@@ -19,3 +19,9 @@ class AbstractMessage:
 
     def get_groupchat_id(self):
         return 0
+
+    def get_reply_message(self):
+        return None
+
+    def get_nickname(self):
+        return None

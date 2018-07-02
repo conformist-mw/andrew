@@ -56,6 +56,10 @@ class Message(AbstractMessage):
     def get_reply_message(self):
         return Message.build_from_raw(self.connection, self.raw['reply_to_message'])
 
+    def get_nickname(self):
+        nickname = self.raw['from']['first_name'] if 'first_name' in self.raw['from'] else ''
+        nickname += ' {}'.format(self.raw['from']['last_name']) if 'last_name' in self.raw['from'] else ''
+        return nickname
 
     @staticmethod
     def build_from_raw(connection, raw):

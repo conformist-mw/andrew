@@ -1,4 +1,5 @@
-FROM python:3.6
+FROM python:3.6.6-alpine3.7
+RUN apk update && apk add build-base
 
 WORKDIR /app
 
