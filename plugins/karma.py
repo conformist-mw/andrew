@@ -10,7 +10,7 @@ class Plugin(AbstractPlugin):
         self.andrew = andrew
         self.db = self.get_db()
         self.cooldown = {}
-        self.cooldown_timer = 7 #in seconds
+        self.cooldown_timer = 15 #in seconds
 
     def register(self):
         self.andrew.commands.add_command('karma', 'Показывает текущую карму пользователя', self.command_handler)
