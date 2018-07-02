@@ -38,7 +38,7 @@ class Plugin(AbstractPlugin):
 
                 await self.change_karma(message, 1)
                 await message.send_back('Поднял карму {} до {}!'.format(
-                                        message.get_nickname(),
+                                        message.get_reply_message().get_nickname(),
                                         await self.get_karma(message, message.get_reply_message().sender)))
             elif message.text.startswith('--') or message.text.startswith('—'):
                 if not await self.checks(message):
@@ -46,7 +46,7 @@ class Plugin(AbstractPlugin):
 
                 await self.change_karma(message, -1)
                 await message.send_back('Опустил карму {} до {}!'.format(
-                                        message.get_nickname(),
+                                        message.get_reply_message().get_nickname(),
                                         await self.get_karma(message, message.get_reply_message().sender)))
 
     async def get_karma(self, message, sender_id):
