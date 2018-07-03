@@ -28,8 +28,6 @@ class Plugin(AbstractPlugin):
         await message.send_back(string)
 
     async def filter_handler(self, message):
-
-        self.andrew.logger.info(message.raw)
         if message.from_groupchat() and message.is_reply():
             if message.text.startswith('++'):
                 checks = await self.checks(message)
