@@ -25,3 +25,9 @@ class AbstractMessage:
 
     def get_nickname(self):
         return None
+
+    def is_moder(self):
+        return False
+
+    def is_admin(self):
+        return False

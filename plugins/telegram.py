@@ -7,7 +7,7 @@ class Plugin(AbstractConnector):
 
     def __init__(self, andrew):
         self.andrew = andrew
-        self._bot = None
+        self.bot = None
         self.protocol = 'telegram'
 
     def register(self):
@@ -20,10 +20,10 @@ class Plugin(AbstractConnector):
         return True
 
     def connect(self, config):
-        self._bot = Bot(api_token=config['token'])
-        self._bot.default_in_groups = True
-        self._bot.default(self.handler)
-        return self._bot.loop
+        self.bot = Bot(api_token=config['token'])
+        self.bot.default_in_groups = True
+        self.bot.default(self.handler)
+        return self.bot.loop
 
     async def handler(self, chat, message):
         msg = Message.build_from_raw(self, message)
@@ -31,7 +31,7 @@ class Plugin(AbstractConnector):
         await self.andrew.handle_message(msg)
 
     async def send_message(self, destination, text, reply_to=None):
-        self._bot.send_message(destination, text, reply_to_message_id=reply_to, parse_mode='Markdown')
+        self.bot.send_message(destination, text, reply_to_message_id=reply_to, parse_mode='Markdown')
 
 
 class Message(AbstractMessage):
@@ -61,12 +61,18 @@ class Message(AbstractMessage):
         nickname += ' {}'.format(self.raw['from']['last_name']) if 'last_name' in self.raw['from'] else ''
         return nickname
 
+    def is_moder(self):
+        return False
+
+    def is_admin(self):
+        return False
+
     @staticmethod
     def build_from_raw(connection, raw):
         msg = Message()
 
         msg.connection = connection
         msg.sender = raw['from']['id']
-        msg.text = raw['text']
+        msg.text = raw['text'] if 'text' in raw else ''
         msg.raw = raw
         return msg
