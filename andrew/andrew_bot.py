@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import signal
+from memoize import Memoizer
 
 from andrew.filters import Filters
 from andrew.plugins import Plugins
@@ -57,11 +58,8 @@ class AndrewBot(object):
     async def handle_command(self, msg):
         command = msg.text[1:]
 
-        # TODO(spark): implement admin commands and security checks
         if self.commands.is_exists(command):
             await self.commands.execute(command, msg)
-        else:
-            await msg.send_back('Команда не найдена!')
 
     def init_logging(self):
         self.logger.setLevel(logging.INFO)

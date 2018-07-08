@@ -21,7 +21,9 @@ class Plugin(AbstractPlugin):
         return True
 
     async def command_handler(self, message):
-        await message.send_back(message.connection.bot.api_call("getChatAdministrators", chat_id=int(message.raw['chat']['id'])))
+        admins = await message.connection.bot.api_call("getChatAdministrators", chat_id=message.raw['chat']['id'])
+        self.andrew.logger.info(admins)
+        await message.send_back(admins)
 
     async def filter_handler(self, message):
         self.andrew.logger.info(message.raw)
