@@ -32,7 +32,7 @@ class Plugin(AbstractPlugin):
                 "Поцелуй из огня!"
             ]))
 
-        m = re.search("(добро[гое] |всем |)утр[ао]( всем|)", message.text)
+        m = re.search("^(добро[ге]?о? |всем |)утр[ао]( всем|)$", message.text)
         if m is not None:
             await message.send_back(random.choice([
                 "И тебе доброе утро!",
@@ -40,7 +40,7 @@ class Plugin(AbstractPlugin):
                 "Какое утро?! Солнце уже высоко!"
             ]))
 
-        m = re.search("(доброй |всем |спокойной |)(ночк?и|[сш]пать)( всем|)", message.text)
+        m = re.search("^(доброй |всем |спокойной |)(ночк?и|[сш]пать)( всем|)$", message.text)
         if m is not None:
             await message.send_back(random.choice([
                 "Сладких снов!",
@@ -49,7 +49,7 @@ class Plugin(AbstractPlugin):
                 "Крепко спатушки!"
             ]))
 
-        m = re.search("(всем |)(здарова?|приве?т?)( всем|)", message.text)
+        m = re.search("^(всем |)(здарова?|приве?т?)( всем|)", message.text)
         if m is not None:
             await message.send_back(random.choice([
                 "Привет, привет!",
