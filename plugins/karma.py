@@ -9,7 +9,7 @@ class Plugin(AbstractPlugin):
     def __init__(self, andrew):
         self.andrew = andrew
         self.db = self.get_db()
-        self.cooldown = {}
+        self.cooldown_cache = {}
         self.cooldown_timer = 10 # in seconds
 
     def register(self):
@@ -23,9 +23,12 @@ class Plugin(AbstractPlugin):
         return True
 
     async def command_handler(self, message):
-        karma = await self.get_karma(message, message.sender)
-        string = 'Твоя карма: {}'.format(karma)
-        await message.send_back(string)
+        if message.from_groupchat():
+            karma = await self.get_karma(message, message.sender)
+            string = 'Твоя карма: {}'.format(karma)
+            await message.send_back(string)
+        else:
+            await message.send_back('Карма работает только в групповом чате!')
 
     async def filter_handler(self, message):
         if message.from_groupchat() and message.is_reply():
@@ -72,10 +75,10 @@ class Plugin(AbstractPlugin):
             await message.send_back('Нельзя изменять карму самому себе!')
             return False
 
-        if message.sender in self.cooldown:
-            if time.time() - self.cooldown[message.sender] < self.cooldown_timer:
+        if message.sender in self.cooldown_cache:
+            if time.time() - self.cooldown_cache[message.sender] < self.cooldown_timer:
                 await message.send_back('Нельзя изменять карму так часто!')
                 return False
 
-        self.cooldown[message.sender] = time.time()
+        self.cooldown_cache[message.sender] = time.time()
         return True
