@@ -6,7 +6,7 @@ class Connectons:
         self.andrew = andrew
 
         self._connectors = {}
-        self._connections = {}
+        self.connections = {}
         self.tasks = []
 
     def add_connector(self, connector):
@@ -27,7 +27,10 @@ class Connectons:
             # Create new connector instance
             connector = self._connectors[connection['protocol']].__class__(self.andrew)
             self.tasks.append(loop.create_task(connector.connect(connection)()))
-            self._connections[c] = connection
+            self.connections[c] = connector
+
+        self.andrew.plugins.post_connect()
+
         try:
             loop.run_forever()
         except KeyboardInterrupt:

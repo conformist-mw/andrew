@@ -14,6 +14,12 @@ class AbstractPlugin:
     def is_visible(self):
         pass
 
+    def pre_connect(self):
+        pass
+
+    def post_connect(self):
+        pass
+
     def get_db(self):
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])

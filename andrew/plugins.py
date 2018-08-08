@@ -1,6 +1,8 @@
 import os
 import sys
 
+from andrew.api.plugin import AbstractPlugin
+
 
 class Plugins:
 
@@ -13,7 +15,7 @@ class Plugins:
             raise Exception('Plugin {} already registered'.format(name))
         mod = __import__(name)
         plugin = mod.Plugin(self.andrew)
-        plugin.register()
+        plugin.pre_connect()
         self.plugins[name] = plugin
 
     def scan_plugins(self, plugins_path):
@@ -24,3 +26,8 @@ class Plugins:
             if ext == '.py':
                 self.add_plugin(fname)
         sys.path.pop(0)
+
+    def post_connect(self):
+        for p in self.plugins:
+            if isinstance(self.plugins[p], AbstractPlugin):
+                self.plugins[p].post_connect()

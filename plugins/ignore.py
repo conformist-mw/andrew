@@ -10,7 +10,7 @@ class Plugin(AbstractPlugin):
         self.andrew = andrew
         self.db = self.get_db()
 
-    def register(self):
+    def pre_connect(self):
         self.andrew.commands.add_command('ignore', 'Добавить или удалить пользователя из игнора', self.command_handler, is_moder=True)
         self.andrew.filters.add_filter(self.filter_handler)
 
@@ -21,10 +21,11 @@ class Plugin(AbstractPlugin):
         return True
 
     async def command_handler(self, message):
-        #admins = await message.connection.bot.api_call("getChatAdministrators", chat_id=message.raw['chat']['id'])
-        #self.andrew.logger.info(admins)
+        admins = await message.connection.bot.api_call("getChatAdministrators", chat_id=message.raw['chat']['id'])
+        self.andrew.logger.info(admins)
         #await message.send_back(admins)
         pass
 
     async def filter_handler(self, message):
-        self.andrew.logger.info(message.raw)
+        pass
+        #self.andrew.logger.info(message.raw)

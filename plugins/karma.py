@@ -1,6 +1,8 @@
 import asyncio
 import time
 
+from aiotg import BotApiError
+
 from andrew.api.plugin import AbstractPlugin
 from tinydb import Query
 
@@ -10,10 +12,13 @@ class Plugin(AbstractPlugin):
         self.andrew = andrew
         self.db = self.get_db()
         self.cooldown_cache = {}
+        self.abuse_first_cache = {}
+        self.abuse_second_cache = {}
         self.cooldown_timer = 10 # in seconds
 
-    def register(self):
-        self.andrew.commands.add_command('karma', 'Показывает текущую карму пользователя', self.command_handler)
+    def pre_connect(self):
+        self.andrew.commands.add_command('karma', 'Показывает текущую карму пользователя', self.karma_handler)
+        self.andrew.commands.add_command('karmatop', 'Показывает топ кармы в чате', self.karmatop_handler)
         self.andrew.filters.add_filter(self.filter_handler)
 
     def get_description(self):
@@ -22,10 +27,34 @@ class Plugin(AbstractPlugin):
     def is_visible(self):
         return True
 
-    async def command_handler(self, message):
+    async def karma_handler(self, message):
         if message.from_groupchat():
             karma = await self.get_karma(message, message.sender)
             string = 'Твоя карма: {}'.format(karma)
+            await message.send_back(string)
+        else:
+            await message.send_back('Карма работает только в групповом чате!')
+
+    async def karmatop_handler(self, message):
+        if message.from_groupchat():
+            # Very unoptimized, but works
+
+            # TODO(spark): works only for telegram now
+            table = self.db.table(str(message.get_groupchat_id()))
+            members = sorted(table.all(), key = lambda i: i['karma'], reverse=True)[0:10]
+
+            string = 'Топ беседы:\n'
+            for member in members:
+                try:
+                    member_info = await message.connection.bot.api_call("getChatMember",
+                                                                        chat_id=message.raw['chat']['id'],
+                                                                        ёuser_id=member['sender_id'])
+                    member_name = member_info['result']['user']['first_name']
+                    member_name += ' {}'.format(member_info['result']['user']['last_name'])\
+                        if 'last_name' in member_info['result']['user'] else ''
+                    string += '{} - {}\n'.format(member_name, member['karma'])
+                except BotApiError:
+                    string += '<недоступно> - {}\n'.format(member['karma'])
             await message.send_back(string)
         else:
             await message.send_back('Карма работает только в групповом чате!')
@@ -79,6 +108,9 @@ class Plugin(AbstractPlugin):
             if time.time() - self.cooldown_cache[message.sender] < self.cooldown_timer:
                 await message.send_back('Нельзя изменять карму так часто!')
                 return False
+
+        if message.sender in self.abuse_second_cache:
+            await message.send_back('Нельзя злоупотреблять кармой!')
 
         self.cooldown_cache[message.sender] = time.time()
         return True

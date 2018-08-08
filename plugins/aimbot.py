@@ -7,7 +7,7 @@ class Plugin(AbstractPlugin):
     def __init__(self, andrew):
         self.andrew = andrew
 
-    def register(self):
+    def pre_connect(self):
         self.andrew.filters.add_filter(self.filter_handler)
 
     def get_description(self):
