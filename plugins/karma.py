@@ -106,8 +106,8 @@ class Plugin(AbstractPlugin):
             return False
 
         if message.sender in self.cooldown_cache:
-            cooldown = self.andrew.settings.get('karma', message.get_groupchat_id())
-            if time.time() - self.cooldown_cache[message.sender] < cooldown:
+            cooldown = self.andrew.settings.get('karma', message.get_groupchat_id()).get('cooldown')
+            if time.time() - self.cooldown_cache[message.sender] < int(cooldown):
                 await message.send_back('Нельзя изменять карму так часто!')
                 return False
 
