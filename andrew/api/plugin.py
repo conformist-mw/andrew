@@ -25,7 +25,12 @@ class AbstractPlugin:
         module = inspect.getmodule(frame[0])
         return self.andrew.database[os.path.basename(module.__file__).replace('.py', '')]
 
-    def get_settings(self, default):
+    def set_settings(self, default):
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])
         return self.andrew.settings.register(os.path.basename(module.__file__).replace('.py', ''), default)
+
+    def get_settings(self, chat):
+        frame = inspect.stack()[1]
+        module = inspect.getmodule(frame[0])
+        return self.andrew.settings.get(os.path.basename(module.__file__).replace('.py', ''), chat)
