@@ -11,7 +11,7 @@ class Plugin(AbstractPlugin):
     def __init__(self, andrew):
         self.andrew = andrew
         self.db = self.get_db()
-        self.settings = self.get_settings({
+        self.get_settings({
             'cooldown': 10
         })
 
@@ -106,7 +106,8 @@ class Plugin(AbstractPlugin):
             return False
 
         if message.sender in self.cooldown_cache:
-            if time.time() - self.cooldown_cache[message.sender] < self.settings.get('cooldown'):
+            cooldown = self.andrew.settings.get('karma', message.get_groupchat_id())
+            if time.time() - self.cooldown_cache[message.sender] < cooldown:
                 await message.send_back('Нельзя изменять карму так часто!')
                 return False
 

@@ -28,7 +28,7 @@ class Plugin(AbstractPlugin):
 
         if len(args) < 3:
             # Show all settings
-            settings = self.andrew.settings.get(plugin_name)
+            settings = self.andrew.settings.get(plugin_name, message.get_groupchat_id())
             settings_all = settings.get_all()
             string = 'Список настроек плагина:\n'
             for setting in settings_all:
@@ -38,10 +38,20 @@ class Plugin(AbstractPlugin):
 
         action = args[1]
         if action == 'set':
-            pass
+            if len(args) < 4:
+                await message.send_back('Недостаточно аргументов')
+                return
+            try:
+                settings = self.andrew.settings.get(plugin_name, message.get_groupchat_id())
+                value = args[3:len(args)]
+                value = ' '.join(value)
+                settings.update(args[2], value)
+                await message.send_back('{}: {}'.format(args[2], value))
+            except Exception:
+                await message.send_back('Переданный ключ не существует')
         elif action == 'get':
             try:
-                settings = self.andrew.settings.get(plugin_name)
+                settings = self.andrew.settings.get(plugin_name, message.get_groupchat_id())
                 setting = settings.get(args[2])
                 await message.send_back(setting)
             except Exception:

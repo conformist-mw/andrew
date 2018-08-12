@@ -21,7 +21,11 @@ class Plugin(AbstractConnector):
         return True
 
     def connect(self, config):
-        self.bot = Bot(api_token=config['token'])
+        proxy = None
+        if 'proxy' in config:
+            self.andrew.logger.info('{}: connecting using proxy'.format(config['token']))
+            proxy = config['proxy']
+        self.bot = Bot(api_token=config['token'], proxy=proxy)
         self.bot.default_in_groups = True
         self.bot.default(self.handler)
         return self.bot.loop
