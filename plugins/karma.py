@@ -15,7 +15,7 @@ class Plugin(AbstractPlugin):
         self.cooldown_cache = {}
         self.abuse_first_cache = {}
         self.abuse_second_cache = {}
-        self.cooldown_timer = 10 # in seconds
+        self.cooldown_timer = 10  # in seconds
 
     def pre_connect(self):
         self.andrew.commands.add_command('karma', 'Показывает текущую карму пользователя', self.karma_handler)
@@ -42,7 +42,7 @@ class Plugin(AbstractPlugin):
 
             # TODO(spark): works only for telegram now
             table = self.db.table(str(message.get_groupchat_id()))
-            members = sorted(table.all(), key = lambda i: i['karma'], reverse=True)[0:10]
+            members = sorted(table.all(), key=lambda i: i['karma'], reverse=True)[0:10]
 
             string = 'Топ беседы:\n'
             for member in members:
@@ -51,7 +51,7 @@ class Plugin(AbstractPlugin):
                                                                         chat_id=message.raw['chat']['id'],
                                                                         user_id=member['sender_id'])
                     member_name = member_info['result']['user']['first_name']
-                    member_name += ' {}'.format(member_info['result']['user']['last_name'])\
+                    member_name += ' {}'.format(member_info['result']['user']['last_name']) \
                         if 'last_name' in member_info['result']['user'] else ''
                     string += '{} - {}\n'.format(member_name, member['karma'])
                 except BotApiError:
@@ -69,16 +69,16 @@ class Plugin(AbstractPlugin):
 
                 await self.change_karma(message, 1)
                 await message.send_back('Поднял карму {} до {}!'.format(
-                                        message.get_reply_message().get_nickname(),
-                                        await self.get_karma(message, message.get_reply_message().sender)))
+                    message.get_reply_message().get_nickname(),
+                    await self.get_karma(message, message.get_reply_message().sender)))
             elif message.text.startswith('--') or message.text.startswith('—'):
                 if not await self.checks(message):
                     return True
 
                 await self.change_karma(message, -1)
                 await message.send_back('Опустил карму {} до {}!'.format(
-                                        message.get_reply_message().get_nickname(),
-                                        await self.get_karma(message, message.get_reply_message().sender)))
+                    message.get_reply_message().get_nickname(),
+                    await self.get_karma(message, message.get_reply_message().sender)))
 
     async def get_karma(self, message, sender_id):
         table = self.db.table(str(message.get_groupchat_id()))
