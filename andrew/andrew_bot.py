@@ -1,15 +1,9 @@
 import logging
-import os
 import sys
 import signal
-from memoize import Memoizer
 
-from andrew.filters import Filters
-from andrew.plugins import Plugins
-from .connections import Connectons
-from .commands import Commands
+from andrew.services import Database, Plugins, Commands, Connectons, Filters
 from .config import Config
-from .database import Database
 
 
 class AndrewBot(object):
