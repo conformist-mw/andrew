@@ -10,6 +10,6 @@ class Database(object):
     def __getitem__(self, item):
         if item in self.cache:
             return self.cache[item]
-        db = TinyDB(os.path.join(self.andrew.config['STORAGE_PATH'], item))
+        db = TinyDB(os.path.join(self.andrew.config['STORAGE_PATH'], '{}.json'.format(item)))
         self.cache[item] = db
         return db

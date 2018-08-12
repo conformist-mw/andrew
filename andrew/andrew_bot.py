@@ -2,7 +2,7 @@ import logging
 import sys
 import signal
 
-from andrew.services import Database, Plugins, Commands, Connectons, Filters
+from andrew.services import Database, Settings, Plugins, Commands, Connectons, Filters
 from .config import Config
 
 
@@ -10,6 +10,7 @@ class AndrewBot(object):
     def __init__(self):
         self.config = Config()
         self.database = Database(self)
+        self.settings = Settings(self)
         self.logger = logging.getLogger()
 
         self.plugins = Plugins(self)
@@ -50,8 +51,8 @@ class AndrewBot(object):
             await self.handle_command(msg)
 
     async def handle_command(self, msg):
-        command = msg.text[1:]
-
+        message = msg.text[1:].split(' ')
+        command = message[0]
         if self.commands.is_exists(command):
             await self.commands.execute(command, msg)
 

@@ -11,11 +11,11 @@ class Plugin(AbstractPlugin):
     def __init__(self, andrew):
         self.andrew = andrew
         self.db = self.get_db()
+        self.settings = self.get_settings({
+            'cooldown': 10
+        })
 
         self.cooldown_cache = {}
-        self.abuse_first_cache = {}
-        self.abuse_second_cache = {}
-        self.cooldown_timer = 10  # in seconds
 
     def pre_connect(self):
         self.andrew.commands.add_command('karma', 'Показывает текущую карму пользователя', self.karma_handler)
@@ -106,12 +106,9 @@ class Plugin(AbstractPlugin):
             return False
 
         if message.sender in self.cooldown_cache:
-            if time.time() - self.cooldown_cache[message.sender] < self.cooldown_timer:
+            if time.time() - self.cooldown_cache[message.sender] < self.settings.get('cooldown'):
                 await message.send_back('Нельзя изменять карму так часто!')
                 return False
-
-        if message.sender in self.abuse_second_cache:
-            await message.send_back('Нельзя злоупотреблять кармой!')
 
         self.cooldown_cache[message.sender] = time.time()
         return True

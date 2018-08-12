@@ -31,3 +31,6 @@ class Plugins:
         for p in self.plugins:
             if isinstance(self.plugins[p], AbstractPlugin):
                 self.plugins[p].post_connect()
+
+    def is_exists(self, name):
+        return name in self.plugins
