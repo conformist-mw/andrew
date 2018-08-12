@@ -13,7 +13,7 @@ class Plugin(AbstractPlugin):
                 connection.add_handler('new_chat_member', self.new_member_handler)
 
     def get_description(self):
-        return 'Приветствует вошедших пользователей (только в Telegram-чатах)'
+        return 'Приветствует вошедших пользователей в Telegram-чатах'
 
     def is_visible(self):
         return True

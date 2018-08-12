@@ -11,6 +11,7 @@ class Plugin(AbstractPlugin):
     def __init__(self, andrew):
         self.andrew = andrew
         self.db = self.get_db()
+
         self.cooldown_cache = {}
         self.abuse_first_cache = {}
         self.abuse_second_cache = {}
@@ -48,7 +49,7 @@ class Plugin(AbstractPlugin):
                 try:
                     member_info = await message.connection.bot.api_call("getChatMember",
                                                                         chat_id=message.raw['chat']['id'],
-                                                                        ёuser_id=member['sender_id'])
+                                                                        user_id=member['sender_id'])
                     member_name = member_info['result']['user']['first_name']
                     member_name += ' {}'.format(member_info['result']['user']['last_name'])\
                         if 'last_name' in member_info['result']['user'] else ''
