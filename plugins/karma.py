@@ -12,7 +12,9 @@ class Plugin(AbstractPlugin):
         self.andrew = andrew
         self.db = self.get_db()
         self.set_settings({
-            'cooldown': 10
+            'cooldown': 10,
+            'inc_message': 'Поднял карму {} до {}!',
+            'dec_message': 'Опустил карму {} до {}!',
         })
 
         self.cooldown_cache = {}

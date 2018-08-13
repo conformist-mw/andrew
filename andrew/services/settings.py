@@ -18,14 +18,14 @@ class Settings:
             raise Exception('Plugin {} not exposed their settings!'.format(plugin))
 
         if chat not in self.plugins:
-            self.plugins[plugin] = SettingsProvider(self.andrew.database['settings_{}'.format(chat)].table(str(plugin)),
+            self.plugins[plugin] = SettingsProvider(self.andrew.database['settings_{}'.format(str(chat))].table(str(plugin)),
                                                     self.plugins_defaults[plugin])
         return self.plugins[plugin]
 
 
 class SettingsProvider:
     def __init__(self, table, default):
-        self.keys = default
+        self.keys = dict(default)
         self.db = table
         for rec in table.all():
             self.keys[rec['key']] = rec['value']
