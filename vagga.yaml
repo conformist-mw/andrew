@@ -9,6 +9,6 @@ containers:
 
 commands:
   run: !Command
-    description: Run VK_Bot
+    description: Run AndrewBot
     container: base
     run: [python3, run.py]

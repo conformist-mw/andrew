@@ -9,8 +9,9 @@ class Plugin(AbstractConnector):
         self.andrew = andrew
         self.bot = None
         self.protocol = 'telegram'
+        self.callbacks = {}
 
-    def register(self):
+    def pre_connect(self):
         self.andrew.connections.add_connector(self)
 
     def get_description(self):
@@ -20,14 +21,23 @@ class Plugin(AbstractConnector):
         return True
 
     def connect(self, config):
-        self.bot = Bot(api_token=config['token'])
+        proxy = None
+        if 'proxy' in config:
+            self.andrew.logger.info('{}: connecting using proxy'.format(config['token']))
+            proxy = config['proxy']
+        self.bot = Bot(api_token=config['token'], proxy=proxy)
         self.bot.default_in_groups = True
         self.bot.default(self.handler)
         return self.bot.loop
 
+    def add_handler(self, msg_type, cb):
+        async def _handler(chat, message):
+            await cb(self, chat, message)
+
+        self.bot.handle(msg_type)(_handler)
+
     async def handler(self, chat, message):
         msg = Message.build_from_raw(self, message)
-
         await self.andrew.handle_message(msg)
 
     async def send_message(self, destination, text, reply_to=None):
@@ -72,7 +82,7 @@ class Message(AbstractMessage):
         msg = Message()
 
         msg.connection = connection
-        msg.sender = raw['from']['id']
+        msg.sender = raw['from']['id'] if 'from' in raw else None
         msg.text = raw['text'] if 'text' in raw else ''
         msg.raw = raw
         return msg

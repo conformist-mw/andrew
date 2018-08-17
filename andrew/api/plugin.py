@@ -14,7 +14,23 @@ class AbstractPlugin:
     def is_visible(self):
         pass
 
+    def pre_connect(self):
+        pass
+
+    def post_connect(self):
+        pass
+
     def get_db(self):
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])
-        return self.andrew.database[os.path.basename(module.__file__)]
+        return self.andrew.database[os.path.basename(module.__file__).replace('.py', '')]
+
+    def set_settings(self, default):
+        frame = inspect.stack()[1]
+        module = inspect.getmodule(frame[0])
+        return self.andrew.settings.register(os.path.basename(module.__file__).replace('.py', ''), default)
+
+    def get_settings(self, chat):
+        frame = inspect.stack()[1]
+        module = inspect.getmodule(frame[0])
+        return self.andrew.settings.get(os.path.basename(module.__file__).replace('.py', ''), chat)

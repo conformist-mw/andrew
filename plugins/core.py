@@ -8,9 +8,8 @@ from tinydb import Query
 class Plugin(AbstractPlugin):
     def __init__(self, andrew):
         self.andrew = andrew
-        self.db = self.get_db()
 
-    def register(self):
+    def pre_connect(self):
         self.andrew.commands.add_command('ping', 'Отправляет "Pong!" в ответ', self.ping_handler)
         self.andrew.commands.add_command('plugins', 'Показывает список загруженных плагинов', self.plugins_handler)
         self.andrew.commands.add_command('commands', 'Показывает список доступных команд', self.commands_handler)

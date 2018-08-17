@@ -8,7 +8,7 @@ class Plugin(AbstractPlugin):
         self.andrew = andrew
         self.p = re.compile('^(\d+)[дd](\d+)$', re.IGNORECASE)
 
-    def register(self):
+    def pre_connect(self):
         self.andrew.filters.add_filter(self.filter_handler)
 
     def get_description(self):
