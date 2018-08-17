@@ -17,7 +17,7 @@ class Plugin(AbstractPlugin):
         return True
 
     async def filter_handler(self, message):
-        m = re.search("2007(?:[мй]|ого|ому|)", message.text)
+        m = re.search("2007(?:[мй]|ого|ому|)", message.text, re.IGNORECASE)
         if m is not None:
             await message.send_back(random.choice([
                 "Никто и никогда не вернет 2007-й год",
@@ -32,7 +32,7 @@ class Plugin(AbstractPlugin):
                 "Поцелуй из огня!"
             ]))
 
-        m = re.search("^(добро[ге]?о? |всем |)утр[ао]( всем|)$", message.text)
+        m = re.search("^(добро[ге]?о? |всем |)утр[ао]( всем|)$", message.text, re.IGNORECASE)
         if m is not None:
             await message.send_back(random.choice([
                 "И тебе доброе утро!",
@@ -40,7 +40,7 @@ class Plugin(AbstractPlugin):
                 "Какое утро?! Солнце уже высоко!"
             ]))
 
-        m = re.search("^(доброй |всем |спокойной |)(ночк?и|[сш]пать)( всем|)$", message.text)
+        m = re.search("^(доброй |всем |спокойной |)(ночк?и|[сш]пать)( всем|)$", message.text, re.IGNORECASE)
         if m is not None:
             await message.send_back(random.choice([
                 "Сладких снов!",
@@ -49,7 +49,7 @@ class Plugin(AbstractPlugin):
                 "Крепко спатушки!"
             ]))
 
-        m = re.search("^(всем |)(здарова?|приве?т?)( всем|)", message.text)
+        m = re.search("^(всем |)(здарова?|приве?т?)( всем|)", message.text, re.IGNORECASE)
         if m is not None:
             await message.send_back(random.choice([
                 "Привет, привет!",
@@ -58,6 +58,6 @@ class Plugin(AbstractPlugin):
                 "Низкий Вам поклон!"
             ]))
 
-        m = re.search("пыщ[ь]?([ ]?пыщ|)", message.text)
+        m = re.search("пыщ[ь]?([ ]?пыщ|)", message.text, re.IGNORECASE)
         if m is not None:
             await message.send_back("Пыщь-пыщь, ололо, я -- водитель НЛО!")
