@@ -13,8 +13,8 @@ class Plugin(AbstractPlugin):
         self.db = self.get_db()
         self.set_settings({
             'cooldown': 10,
-            'inc_message': 'Поднял карму {} до {}!',
-            'dec_message': 'Опустил карму {} до {}!',
+            'incmessage': 'Поднял карму {} до {}!',
+            'decmessage': 'Опустил карму {} до {}!',
         })
 
         self.cooldown_cache = {}
@@ -70,7 +70,7 @@ class Plugin(AbstractPlugin):
                     return True
 
                 await self.change_karma(message, 1)
-                await message.send_back('Поднял карму {} до {}!'.format(
+                await message.send_back(self.get_settings(message.get_groupchat_id()).get('incmessage').format(
                     message.get_reply_message().get_nickname(),
                     await self.get_karma(message, message.get_reply_message().sender)))
             elif message.text.startswith('--') or message.text.startswith('—'):
@@ -78,7 +78,7 @@ class Plugin(AbstractPlugin):
                     return True
 
                 await self.change_karma(message, -1)
-                await message.send_back('Опустил карму {} до {}!'.format(
+                await message.send_back(self.get_settings(message.get_groupchat_id()).get('decmessage').format(
                     message.get_reply_message().get_nickname(),
                     await self.get_karma(message, message.get_reply_message().sender)))
 
