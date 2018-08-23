@@ -2,7 +2,7 @@ import logging
 import sys
 import signal
 
-from andrew.services import Database, Settings, Plugins, Commands, Connectons, Filters
+from andrew.services import Database, Cache, Settings, Plugins, Commands, Connectons, Filters
 from .config import Config
 
 
@@ -10,6 +10,7 @@ class AndrewBot(object):
     def __init__(self):
         self.config = Config()
         self.database = Database(self)
+        self.cache = Cache(self)
         self.settings = Settings(self)
         self.logger = logging.getLogger()
 

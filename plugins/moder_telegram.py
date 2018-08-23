@@ -1,4 +1,3 @@
-import asyncio
 import time
 
 from andrew.api.plugin import AbstractPlugin
@@ -21,8 +20,14 @@ class Plugin(AbstractPlugin):
         return True
 
     async def ignore_handler(self, message):
-        admins = await message.connection.bot.api_call("getChatAdministrators", chat_id=message.raw['chat']['id'])
-        self.andrew.logger.info(admins)
+        #admins = await message.connection.bot.api_call("getChatAdministrators", chat_id=message.raw['chat']['id'])
+        t = self.andrew.cache.get('time')
+        if not t:
+            await message.send_back('save time')
+            t = time.time()
+            self.andrew.cache.save('time', t)
+        await message.send_back(t)
+        #self.andrew.logger.info(admins)
         #await message.send_back(admins)
         pass
 
