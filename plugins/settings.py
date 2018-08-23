@@ -47,14 +47,14 @@ class Plugin(AbstractPlugin):
                 value = ' '.join(value)
                 settings.update(args[2], value)
                 await message.send_back('{}: {}'.format(args[2], value))
-            except Exception:
+            except KeyError:
                 await message.send_back('Переданный ключ не существует')
         elif action == 'get':
             try:
                 settings = self.andrew.settings.get(plugin_name, message.get_groupchat_id())
                 setting = settings.get(args[2])
                 await message.send_back(setting)
-            except Exception:
+            except KeyError:
                 await message.send_back('Переданный ключ не существует')
         else:
             await message.send_back('Не удалось распознать действие')

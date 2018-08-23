@@ -9,13 +9,13 @@ class Settings:
 
     def register(self, plugin, default):
         if plugin in self.plugins:
-            raise Exception('Plugin {} already exposed their settings!'.format(plugin))
+            raise KeyError('Plugin {} already exposed their settings!'.format(plugin))
 
         self.plugins_defaults[plugin] = default
 
     def get(self, plugin, chat):
         if plugin not in self.plugins_defaults:
-            raise Exception('Plugin {} not exposed their settings!'.format(plugin))
+            raise KeyError('Plugin {} not exposed their settings!'.format(plugin))
 
         if chat not in self.plugins:
             self.plugins[plugin] = SettingsProvider(self.andrew.database['settings_{}'.format(str(chat))].table(str(plugin)),
@@ -32,7 +32,7 @@ class SettingsProvider:
 
     def get(self, key):
         if key not in self.keys:
-            raise Exception('Key {} is not found in settings provider!'.format(key))
+            raise KeyError('Key {} is not found in settings provider!'.format(key))
 
         return self.keys[key]
 
@@ -41,13 +41,13 @@ class SettingsProvider:
 
     def set(self, key, value):
         if key not in self.keys:
-            raise Exception('Key {} is not found in settings provider!'.format(key))
+            raise KeyError('Key {} is not found in settings provider!'.format(key))
 
         self.keys[key] = value
 
     def update(self, key, value):
         if key not in self.keys:
-            raise Exception('Key {} is not found in settings provider!'.format(key))
+            raise KeyError('Key {} is not found in settings provider!'.format(key))
 
         self.db.upsert({'key': key, 'value': value}, Query().key == key)
         self.set(key, value)

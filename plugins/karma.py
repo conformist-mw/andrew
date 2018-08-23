@@ -71,7 +71,7 @@ class Plugin(AbstractPlugin):
 
                 await self.change_karma(message, 1)
                 await message.send_back(self.get_settings(message.get_groupchat_id()).get('incmessage').format(
-                    message.get_reply_message().get_nickname(),
+                    message.get_reply_message().sender.get_nickname(),
                     await self.get_karma(message, message.get_reply_message().sender)))
             elif message.text.startswith('--') or message.text.startswith('—'):
                 if not await self.checks(message):
@@ -79,10 +79,11 @@ class Plugin(AbstractPlugin):
 
                 await self.change_karma(message, -1)
                 await message.send_back(self.get_settings(message.get_groupchat_id()).get('decmessage').format(
-                    message.get_reply_message().get_nickname(),
+                    message.get_reply_message().sender.get_nickname(),
                     await self.get_karma(message, message.get_reply_message().sender)))
 
-    async def get_karma(self, message, sender_id):
+    async def get_karma(self, message, sender):
+        sender_id = sender.get_id()
         table = self.db.table(str(message.get_groupchat_id()))
         karma = table.search(Query().sender_id == sender_id)
         if not karma:
@@ -96,22 +97,23 @@ class Plugin(AbstractPlugin):
         karma = await self.get_karma(message, message.get_reply_message().sender)
 
         table = self.db.table(str(message.get_groupchat_id()))
-        table.update({'karma': karma + diff}, Query().sender_id == message.get_reply_message().sender)
+        table.update({'karma': karma + diff}, Query().sender_id == message.get_reply_message().sender.get_id())
 
     async def checks(self, message):
-        if message.get_reply_message().from_bot():
+        sender_id = message.sender.get_id()
+        if message.get_reply_message().sender.is_bot():
             await message.send_back('Нельзя изменять карму боту!')
             return False
 
-        if message.get_reply_message().sender == message.sender:
+        if message.get_reply_message().sender.get_id() == sender_id:
             await message.send_back('Нельзя изменять карму самому себе!')
             return False
 
-        if message.sender in self.cooldown_cache:
+        if sender_id in self.cooldown_cache:
             cooldown = self.get_settings(message.get_groupchat_id()).get('cooldown')
-            if time.time() - self.cooldown_cache[message.sender] < int(cooldown):
+            if time.time() - self.cooldown_cache[sender_id] < int(cooldown):
                 await message.send_back('Нельзя изменять карму так часто!')
                 return False
 
-        self.cooldown_cache[message.sender] = time.time()
+        self.cooldown_cache[sender_id] = time.time()
         return True

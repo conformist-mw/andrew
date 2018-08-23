@@ -1,6 +1,7 @@
 from aiotg import Bot
 from andrew.api.connector import AbstractConnector
 from andrew.api.message import AbstractMessage
+from andrew.api.sender import AbstractSender
 
 
 class Plugin(AbstractConnector):
@@ -54,9 +55,6 @@ class Message(AbstractMessage):
     def from_groupchat(self):
         return self.raw['chat']['id'] < 0
 
-    def from_bot(self):
-        return self.raw['from']['is_bot']
-
     def is_reply(self):
         return 'reply_to_message' in self.raw
 
@@ -66,9 +64,27 @@ class Message(AbstractMessage):
     def get_reply_message(self):
         return Message.build_from_raw(self.connection, self.raw['reply_to_message'])
 
+    @staticmethod
+    def build_from_raw(connection, raw):
+        msg = Message()
+
+        msg.connection = connection
+        msg.sender = Sender.build_from_raw(raw['from']) if 'from' in raw else None
+        msg.text = raw['text'] if 'text' in raw else ''
+        msg.raw = raw
+        return msg
+
+
+class Sender(AbstractSender):
+    def is_bot(self):
+        return self.raw['is_bot']
+
+    def get_id(self):
+        return self.raw['id']
+
     def get_nickname(self):
-        nickname = self.raw['from']['first_name'] if 'first_name' in self.raw['from'] else ''
-        nickname += ' {}'.format(self.raw['from']['last_name']) if 'last_name' in self.raw['from'] else ''
+        nickname = self.raw['first_name'] if 'first_name' in self.raw else ''
+        nickname += ' {}'.format(self.raw['last_name']) if 'last_name' in self.raw else ''
         return nickname
 
     def is_moder(self):
@@ -78,11 +94,8 @@ class Message(AbstractMessage):
         return False
 
     @staticmethod
-    def build_from_raw(connection, raw):
-        msg = Message()
+    def build_from_raw(raw):
+        sender = Sender()
 
-        msg.connection = connection
-        msg.sender = raw['from']['id'] if 'from' in raw else None
-        msg.text = raw['text'] if 'text' in raw else ''
-        msg.raw = raw
-        return msg
+        sender.raw = raw
+        return sender
