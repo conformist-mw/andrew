@@ -13,6 +13,7 @@ class Plugin(AbstractPlugin):
         self.db = self.get_db()
         self.set_settings({
             'cooldown': 10,
+            'cleanup': 10,
             'incmessage': 'Поднял карму {} до {}!',
             'decmessage': 'Опустил карму {} до {}!',
         })
@@ -64,23 +65,28 @@ class Plugin(AbstractPlugin):
 
     async def filter_handler(self, message):
         if message.from_groupchat() and message.is_reply():
+            cleanup_time = int(self.get_settings(message.get_groupchat_id()).get('cleanup'))
             if message.text.startswith('++'):
                 checks = await self.checks(message)
                 if not checks:
                     return True
 
                 await self.change_karma(message, 1)
-                await message.send_back(self.get_settings(message.get_groupchat_id()).get('incmessage').format(
+                response_message = await message.send_back(self.get_settings(message.get_groupchat_id()).get('incmessage').format(
                     message.get_reply_message().sender.get_nickname(),
                     await self.get_karma(message, message.get_reply_message().sender)))
+                await asyncio.sleep(cleanup_time)
+                response_message.delete()
             elif message.text.startswith('--') or message.text.startswith('—'):
                 if not await self.checks(message):
                     return True
 
                 await self.change_karma(message, -1)
-                await message.send_back(self.get_settings(message.get_groupchat_id()).get('decmessage').format(
+                response_message = await message.send_back(self.get_settings(message.get_groupchat_id()).get('decmessage').format(
                     message.get_reply_message().sender.get_nickname(),
                     await self.get_karma(message, message.get_reply_message().sender)))
+                await asyncio.sleep(cleanup_time)
+                response_message.delete()
 
     async def get_karma(self, message, sender):
         sender_id = sender.get_id()

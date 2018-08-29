@@ -42,15 +42,20 @@ class Plugin(AbstractConnector):
         await self.andrew.handle_message(msg)
 
     async def send_message(self, destination, text, reply_to=None):
-        self.bot.send_message(destination, text, reply_to_message_id=reply_to, parse_mode='Markdown')
+        return await self.bot.send_message(destination, text, reply_to_message_id=reply_to, parse_mode='Markdown')
 
 
 class Message(AbstractMessage):
     async def send_back(self, text):
         if self.from_groupchat():
-            await self.connection.send_message(self.raw['chat']['id'], text, self.raw['message_id'])
+            msg = await self.connection.send_message(self.raw['chat']['id'], text, self.raw['message_id'])
+            return Message.build_from_raw(self.connection, msg['result'])
         else:
-            await self.connection.send_message(self.sender, text)
+            msg = await self.connection.send_message(self.sender, text)
+            return Message.build_from_raw(self.connection, msg['result'])
+
+    def get_id(self):
+        return self.raw['message_id']
 
     def from_groupchat(self):
         return self.raw['chat']['id'] < 0
@@ -63,6 +68,12 @@ class Message(AbstractMessage):
 
     def get_reply_message(self):
         return Message.build_from_raw(self.connection, self.raw['reply_to_message'])
+
+    # Telegram-only method
+    def delete(self):
+        return self.connection.bot.api_call(
+            "deleteMessage", chat_id=self.get_groupchat_id(), message_id=self.get_id()
+        )
 
     @staticmethod
     def build_from_raw(connection, raw):

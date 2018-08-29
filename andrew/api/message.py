@@ -8,26 +8,17 @@ class AbstractMessage:
     async def send_back(self, text):
         pass
 
-    def from_groupchat(self):
-        return False
+    def get_id(self):
+        return None
 
-    def from_bot(self):
+    def from_groupchat(self):
         return False
 
     def is_reply(self):
         return False
 
     def get_groupchat_id(self):
-        return 0
+        return None
 
     def get_reply_message(self):
         return None
-
-    def get_nickname(self):
-        return None
-
-    def is_moder(self):
-        return False
-
-    def is_admin(self):
-        return False

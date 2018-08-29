@@ -33,6 +33,7 @@ class Plugin(AbstractPlugin):
             string = 'Список настроек плагина:\n'
             for setting in settings_all:
                 string += '{}: {}\n'.format(setting, settings_all[setting])
+            self.andrew.logger.info(string)
             await message.send_back(string)
             return
 
