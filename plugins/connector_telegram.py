@@ -8,8 +8,9 @@ class Plugin(AbstractConnector):
 
     def __init__(self, andrew):
         super().__init__(andrew)
-        self.bot = None
         self.protocol = 'telegram'
+
+        self.bot = None
         self.callbacks = {}
 
     def pre_connect(self):
