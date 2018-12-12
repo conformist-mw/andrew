@@ -18,9 +18,6 @@ class Plugin(AbstractPlugin):
     def get_description(self):
         return 'Базовая сервисная функциональность'
 
-    def is_visible(self):
-        return True
-
     async def ping_handler(self, message):
         await message.send_back('Pong!')
 
@@ -30,7 +27,8 @@ class Plugin(AbstractPlugin):
 
         string = 'Список доступных плагинов:\n'
         for plugin in plugins:
-            string += '*{}* - {}\n'.format(plugin, plugins[plugin].get_description())
+            if plugins[plugin].public:
+                string += '*{}* - {}\n'.format(plugin, plugins[plugin].get_description())
         await message.send_back(string)
 
     async def commands_handler(self, message):

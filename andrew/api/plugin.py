@@ -8,13 +8,10 @@ class AbstractPlugin:
 
     def __init__(self, andrew=None):
         self.andrew = andrew
+        self.public = True
 
     @abc.abstractmethod
     def get_description(self):
-        pass
-
-    @abc.abstractmethod
-    def is_visible(self):
         pass
 
     def pre_connect(self):

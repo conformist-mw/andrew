@@ -19,9 +19,6 @@ class Plugin(AbstractConnector):
     def get_description(self):
         return "Плагин для поддержки Telegram-чатов"
 
-    def is_visible(self):
-        return True
-
     def connect(self, config):
         proxy = None
         if 'proxy' in config:

@@ -29,9 +29,6 @@ class Plugin(AbstractPlugin):
     def get_description(self):
         return 'Управляет кармой пользователя'
 
-    def is_visible(self):
-        return True
-
     async def karma_handler(self, message):
         if message.from_groupchat():
             karma = await self.get_karma(message, message.sender)

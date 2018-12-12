@@ -15,9 +15,6 @@ class Plugin(AbstractPlugin):
     def get_description(self):
         return 'Отвечает за разбор дайсов вида 1д6'
 
-    def is_visible(self):
-        return True
-
     async def filter_handler(self, message):
         m = self.p.match(message.text)
         if m is None:

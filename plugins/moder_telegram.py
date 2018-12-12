@@ -17,9 +17,6 @@ class Plugin(AbstractPlugin):
     def get_description(self):
         return 'Плагин модерации Telegram-чатов'
 
-    def is_visible(self):
-        return True
-
     async def ignore_handler(self, message):
         #admins = await message.connection.bot.api_call("getChatAdministrators", chat_id=message.raw['chat']['id'])
         t = self.andrew.cache.get('time')

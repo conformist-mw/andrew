@@ -4,6 +4,7 @@ from andrew.api.plugin import AbstractPlugin
 class Plugin(AbstractPlugin):
     def __init__(self, andrew):
         super().__init__(andrew)
+        self.public = False
 
     def pre_connect(self):
         self.andrew.commands.add_command('settings', 'Изменяет настройки плагинов бота', self.settings_handler,
@@ -11,9 +12,6 @@ class Plugin(AbstractPlugin):
 
     def get_description(self):
         return 'Изменение настроек плагинов бота'
-
-    def is_visible(self):
-        return True
 
     async def settings_handler(self, message):
         args = message.text.split(' ')[1:]

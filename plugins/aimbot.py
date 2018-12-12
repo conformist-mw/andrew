@@ -13,9 +13,6 @@ class Plugin(AbstractPlugin):
     def get_description(self):
         return 'Реакция на разные слова в сообщениях'
 
-    def is_visible(self):
-        return True
-
     async def filter_handler(self, message):
         m = re.search("2007(?:[мй]|ого|ому|)", message.text, re.IGNORECASE)
         if m is not None:

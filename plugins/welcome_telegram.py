@@ -19,9 +19,6 @@ class Plugin(AbstractPlugin):
     def get_description(self):
         return 'Приветствует вошедших пользователей в Telegram-чатах'
 
-    def is_visible(self):
-        return True
-
     async def new_member_handler(self, connector, chat, message):
         nickname = message['first_name'] if 'first_name' in message else ''
         nickname += ' {}'.format(message['last_name']) if 'last_name' in message else ''
