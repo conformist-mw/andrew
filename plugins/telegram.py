@@ -7,7 +7,7 @@ from andrew.api.sender import AbstractSender
 class Plugin(AbstractConnector):
 
     def __init__(self, andrew):
-        self.andrew = andrew
+        super().__init__(andrew)
         self.bot = None
         self.protocol = 'telegram'
         self.callbacks = {}
