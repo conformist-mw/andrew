@@ -3,7 +3,7 @@ from andrew.api.plugin import AbstractPlugin
 
 class Plugin(AbstractPlugin):
     def __init__(self, andrew):
-        self.andrew = andrew
+        super().__init__(andrew)
 
     def pre_connect(self):
         self.andrew.commands.add_command('settings', 'Изменяет настройки плагинов бота', self.settings_handler,

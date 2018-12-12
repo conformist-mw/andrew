@@ -9,7 +9,8 @@ from tinydb import Query
 
 class Plugin(AbstractPlugin):
     def __init__(self, andrew):
-        self.andrew = andrew
+        super().__init__(andrew)
+
         self.db = self.get_db()
         self.set_settings({
             'cooldown': 10,

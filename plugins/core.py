@@ -7,7 +7,7 @@ from tinydb import Query
 
 class Plugin(AbstractPlugin):
     def __init__(self, andrew):
-        self.andrew = andrew
+        super().__init__(andrew)
 
     def pre_connect(self):
         self.andrew.commands.add_command('ping', 'Отправляет "Pong!" в ответ', self.ping_handler)

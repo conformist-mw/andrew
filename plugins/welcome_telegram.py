@@ -3,7 +3,8 @@ from andrew.api.plugin import AbstractPlugin
 
 class Plugin(AbstractPlugin):
     def __init__(self, andrew):
-        self.andrew = andrew
+        super().__init__(andrew)
+
         self.set_settings({
             'message': 'Привет, {}!'
         })

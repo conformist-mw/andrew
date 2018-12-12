@@ -6,8 +6,8 @@ import os
 class AbstractPlugin:
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self):
-        self.andrew = None
+    def __init__(self, andrew=None):
+        self.andrew = andrew
 
     @abc.abstractmethod
     def get_description(self):
@@ -25,7 +25,7 @@ class AbstractPlugin:
 
     def get_db(self):
         if self.andrew is None:
-            raise EnvironmentError('Plugin system don\'t initialized!')
+            raise EnvironmentError('Plugin don\'t initialized!')
 
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])
@@ -33,7 +33,7 @@ class AbstractPlugin:
 
     def set_settings(self, default):
         if self.andrew is None:
-            raise EnvironmentError('Plugin system don\'t initialized!')
+            raise EnvironmentError('Plugin don\'t initialized!')
 
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])
@@ -41,7 +41,7 @@ class AbstractPlugin:
 
     def get_settings(self, chat):
         if self.andrew is None:
-            raise EnvironmentError('Plugin system don\'t initialized!')
+            raise EnvironmentError('Plugin don\'t initialized!')
 
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])

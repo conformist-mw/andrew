@@ -5,7 +5,8 @@ from andrew.api.plugin import AbstractPlugin
 
 class Plugin(AbstractPlugin):
     def __init__(self, andrew):
-        self.andrew = andrew
+        super().__init__(andrew)
+
         self.p = re.compile('^(\d+)[дd](\d+)$', re.IGNORECASE)
 
     def pre_connect(self):
