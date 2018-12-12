@@ -34,6 +34,7 @@ class AbstractPlugin:
 
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])
+        default['enabled'] = self.public
         return self.andrew.settings.register(os.path.basename(module.__file__).replace('.py', ''), default)
 
     def get_settings(self, chat):

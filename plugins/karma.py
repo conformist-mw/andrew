@@ -48,6 +48,7 @@ class Plugin(AbstractPlugin):
             string = 'Топ беседы:\n'
             for member in members:
                 try:
+                    # TODO(spark): use system cache mechanism or move it to connector-specific module
                     member_info = await message.connection.bot.api_call("getChatMember",
                                                                         chat_id=message.raw['chat']['id'],
                                                                         user_id=member['sender_id'])
@@ -62,6 +63,7 @@ class Plugin(AbstractPlugin):
             await message.send_back('Карма работает только в групповом чате!')
 
     async def filter_handler(self, message):
+        # TODO(spark): try to rework with DRY in mind
         if message.from_groupchat() and message.is_reply():
             cleanup_time = int(self.get_settings(message.get_groupchat_id()).get('cleanup'))
             if message.text.startswith('++'):
