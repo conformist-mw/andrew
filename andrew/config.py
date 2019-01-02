@@ -18,7 +18,7 @@ class BaseConfig(object):
     PLUGINS_PATH = 'plugins'
     STORAGE_PATH = 'storage'
 
-    COMMAND_SYMBOL = '!'
+    COMMAND_SYMBOL = '/'
 
     ADMINS = []
 
