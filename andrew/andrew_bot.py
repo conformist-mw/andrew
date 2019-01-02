@@ -41,6 +41,8 @@ class AndrewBot(object):
     def unload(self):
         for t in self.connections.tasks:
             t.cancel()
+        self.connections.loop.stop()
+
         for d in self.database.cache:
             self.database.cache[d].close()
 
