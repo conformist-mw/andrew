@@ -4,7 +4,7 @@ from andrew.api.message import AbstractMessage
 from andrew.api.sender import AbstractSender
 
 
-class Plugin(AbstractConnector):
+class TelegramConnector(AbstractConnector):
 
     def __init__(self, andrew):
         super().__init__(andrew)
