@@ -26,7 +26,7 @@ class AbstractPlugin:
 
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])
-        return self.andrew.database[os.path.basename(module.__file__).replace('.py', '')]
+        return self.andrew.database['plugin_'+os.path.basename(module.__file__).replace('.py', '')]
 
     def set_settings(self, default):
         if self.andrew is None:

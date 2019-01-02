@@ -6,11 +6,11 @@ class Commands:
         self.moder_commands = []
         self.admin_commands = []
 
-    def add_command(self, name, help, handler, is_moder=False, is_admin=False):
+    def add_command(self, name, description, handler, is_moder=False, is_admin=False):
         if name in self.commands:
             raise Exception('Command {} already registered'.format(name))
         self.commands[name] = handler
-        self.commands_help[name] = help
+        self.commands_help[name] = description
 
         if is_moder:
             self.moder_commands.append(name)

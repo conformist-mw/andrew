@@ -19,7 +19,7 @@ class Settings:
 
         if chat not in self.plugins:
             self.plugins[plugin] = SettingsProvider(self.andrew.database[
-                                                        'settings_{}'.format(str(chat))].table(str(plugin)),
+                                                        'chat_{}'.format(str(chat))].table(str(plugin)),
                                                     self.plugins_defaults[plugin])
         return self.plugins[plugin]
 
