@@ -42,6 +42,5 @@ class Plugin(AbstractPlugin):
     async def info_handler(self, message):
         user = message.sender
         string = 'Информация о пользователе {}:\n'.format(user.raw['username'])
-        string += 'Протокол: *{}*\n'.format(message.connection.protocol)
         string += 'ID пользователя: *{}*\n'.format(user.get_id())
         await message.send_back(string)
