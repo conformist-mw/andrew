@@ -6,7 +6,8 @@ class Plugin(AbstractPlugin):
         super().__init__(andrew)
 
         self.set_settings({
-            'message': 'Привет, {}!'
+            'message': 'Привет, {}!',
+            'terminator': False
         })
 
     def post_connect(self):
