@@ -1,29 +1,24 @@
 from aiotg import Bot
-from andrew.api.connector import AbstractConnector
 from andrew.api.message import AbstractMessage
 from andrew.api.sender import AbstractSender
 
 
-class TelegramConnector(AbstractConnector):
+class TelegramConnector:
 
     def __init__(self, andrew):
-        super().__init__(andrew)
-        self.protocol = 'telegram'
-
+        self.andrew = andrew
         self.bot = None
         self.callbacks = {}
 
     def pre_connect(self):
         self.andrew.connections.add_connector(self)
 
-    def get_description(self):
-        return "Плагин для поддержки Telegram-чатов"
-
     def connect(self, config):
         proxy = None
         if 'proxy' in config:
-            self.andrew.logger.info('{}: connecting using proxy'.format(config['token']))
+            self.andrew.logger.info('{}: connecting through proxy'.format(config['token']))
             proxy = config['proxy']
+
         self.bot = Bot(api_token=config['token'], proxy=proxy)
         self.bot.default_in_groups = True
         self.bot.default(self.handler)
@@ -67,7 +62,6 @@ class Message(AbstractMessage):
     def get_reply_message(self):
         return Message.build_from_raw(self.connection, self.raw['reply_to_message'])
 
-    # Telegram-only method
     def delete(self):
         return self.connection.bot.api_call(
             "deleteMessage", chat_id=self.get_groupchat_id(), message_id=self.get_id()

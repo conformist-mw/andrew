@@ -13,11 +13,10 @@ class Plugin(AbstractPlugin):
         connections = self.andrew.connections.connections
         for c in connections:
             connection = self.andrew.connections.connections[c]
-            if connection.protocol == 'telegram':
-                connection.add_handler('new_chat_member', self.new_member_handler)
+            connection.add_handler('new_chat_member', self.new_member_handler)
 
     def get_description(self):
-        return 'Приветствует вошедших пользователей в Telegram-чатах'
+        return 'Приветствует вошедших пользователей'
 
     async def new_member_handler(self, connector, chat, message):
         nickname = message['first_name'] if 'first_name' in message else ''
