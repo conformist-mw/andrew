@@ -41,7 +41,6 @@ class Plugin(AbstractPlugin):
         if message.from_groupchat():
             # Very unoptimized, but works
 
-            # TODO(spark): works only for telegram now
             table = self.db.table(str(message.get_groupchat_id()))
             members = sorted(table.all(), key=lambda i: i['karma'], reverse=True)[0:10]
 

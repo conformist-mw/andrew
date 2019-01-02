@@ -55,7 +55,10 @@ class AndrewBot(object):
 
     async def handle_command(self, msg):
         message = msg.text[1:].split(' ')
+
         command = message[0]
+        if '@' in command:
+            command = command.split('@')[0]
         if self.commands.is_exists(command):
             await self.commands.execute(command, msg)
 

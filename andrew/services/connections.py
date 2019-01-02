@@ -1,6 +1,6 @@
 import asyncio
 
-from andrew.connector import TelegramConnector
+from andrew.connector.telegram import TelegramConnector
 
 
 class Connectons:
