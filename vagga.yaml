@@ -1,7 +1,7 @@
 containers:
   base:
     setup:
-      - !Ubuntu xenial
+      - !Ubuntu bionic
       - !Install ['ca-certificates']
       - !PipConfig
         dependencies: true
