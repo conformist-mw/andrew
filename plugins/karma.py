@@ -4,6 +4,7 @@ import time
 from aiotg import BotApiError
 
 from andrew.api.plugin import AbstractPlugin
+from andrew.util import escape
 from tinydb import Query
 
 
@@ -54,7 +55,7 @@ class Plugin(AbstractPlugin):
                     member_name = member_info['result']['user']['first_name']
                     member_name += ' {}'.format(member_info['result']['user']['last_name']) \
                         if 'last_name' in member_info['result']['user'] else ''
-                    string += '{} - {}\n'.format(member_name, member['karma'])
+                    string += '{} - {}\n'.format(escape(member_name), member['karma'])
                 except BotApiError:
                     string += '<недоступно> - {}\n'.format(member['karma'])
             await message.send_back(string)
@@ -72,7 +73,7 @@ class Plugin(AbstractPlugin):
 
                 await self.change_karma(message, 1)
                 response_message = await message.send_back(self.get_settings(message.get_groupchat_id()).get('incmessage').format(
-                    message.get_reply_message().sender.get_nickname(),
+                    escape(message.get_reply_message().sender.get_nickname()),
                     await self.get_karma(message, message.get_reply_message().sender)))
                 await asyncio.sleep(cleanup_time)
                 response_message.delete()
@@ -82,7 +83,7 @@ class Plugin(AbstractPlugin):
 
                 await self.change_karma(message, -1)
                 response_message = await message.send_back(self.get_settings(message.get_groupchat_id()).get('decmessage').format(
-                    message.get_reply_message().sender.get_nickname(),
+                    escape(message.get_reply_message().sender.get_nickname()),
                     await self.get_karma(message, message.get_reply_message().sender)))
                 await asyncio.sleep(cleanup_time)
                 response_message.delete()
