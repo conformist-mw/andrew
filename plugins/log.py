@@ -22,9 +22,5 @@ class Plugin(AbstractPlugin):
     async def log_filter(self, message):
         enabled = bool(self.get_settings(message.get_groupchat_id()).get('enabled'))
         if enabled:
-            if message.from_groupchat():
-                self.andrew.logger.info(f'LOG [{message.get_groupchat_id()}] [{message.sender.get_nickname()}: '
-                                        f'{message.text}')
-            else:
-                self.andrew.logger.info(f'LOG [{message.get_groupchat_id()}] [{message.sender.get_nickname()}: '
-                                        f'{message.text}')
+            self.andrew.logger.info(f'LOG [{message.get_groupchat_id()}] [{message.sender.get_nickname()}]: '
+                                    f'{message.text}')
