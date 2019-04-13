@@ -16,7 +16,7 @@ class Connectons:
             connection = connections[c]
 
             # Create new connector instance
-            connector = TelegramConnector(self.andrew)
+            connector = TelegramConnector(c, self.andrew)
             self.tasks.append(self.loop.create_task(connector.connect(connection)()))
             self.connections[c] = connector
 

@@ -4,7 +4,8 @@ from andrew.connector.message import Message
 
 class TelegramConnector:
 
-    def __init__(self, andrew):
+    def __init__(self, name, andrew):
+        self.name = name
         self.andrew = andrew
         self.bot = None
         self.callbacks = {}
