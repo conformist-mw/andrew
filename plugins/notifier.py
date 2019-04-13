@@ -41,13 +41,14 @@ class Plugin(AbstractPlugin):
 
     async def handle(self, request):
         data = await request.post()
-        print(data['uuid'])
         if 'uuid' in data and 'text' in data:
-            row = self.db.search(Query().uuid == uuid)
+            row = self.db.search(Query().uuid == data['uuid'])
             if not row:
-                return web.Response(text='404 UUID not found')
+                return web.Response(text='404 UUID not found\n')
 
-            self.andrew.connections.connections[row['connector']].send_message(row['chat_id'], data['text'])
-            return web.Response(text='200 OK')
+            row = row[0]
+            await self.andrew.connections.connections[row['connector']]\
+                .send_message(row['chat_id'], f'*Уведомление*\n{data["text"]}')
+            return web.Response(text='200 OK\n')
         else:
-            return web.Response(text='403 Access denied')
+            return web.Response(text='403 Access denied\n')
