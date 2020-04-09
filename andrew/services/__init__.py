@@ -5,3 +5,4 @@ from .cache import Cache
 from .filters import Filters
 from .plugins import Plugins
 from .settings import Settings
+from .db import SqliteDB
