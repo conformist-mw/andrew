@@ -13,4 +13,3 @@ class Database(object):
         db = TinyDB(os.path.join(self.andrew.config['STORAGE_PATH'], '{}.json'.format(item)))
         self.cache[item] = db
         return db
-help
