@@ -14,7 +14,7 @@ class Plugin(AbstractPlugin):
         return 'Отвечаю случайной фразой'
 
     async def filter_handler(self, message):
-        if not message.is_reply() or not message.from_groupchat():
+        if not message.is_reply() or not message.from_groupchat() or not message.get_reply_message().sender.is_bot():
             return
         with self.db as db:
             db.insert_message(context={
