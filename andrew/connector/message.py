@@ -20,6 +20,12 @@ class Message:
     def get_id(self):
         return self.raw['message_id']
 
+    def get_user_id(self):
+        return self.raw['from']['id']
+
+    def get_username(self):
+        return self.raw['from']['username']
+
     def from_groupchat(self):
         return self.raw['chat']['id'] < 0
 
